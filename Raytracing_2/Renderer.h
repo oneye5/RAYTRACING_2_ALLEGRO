@@ -3,7 +3,7 @@
 #include <vector>
 
 using std::vector;
-
+//var definitions
 class Vector3
 {
 public:
@@ -28,6 +28,7 @@ public:
 		y = Y;
 	}
 };
+//declarations
 class ViewPort
 {
 public:
