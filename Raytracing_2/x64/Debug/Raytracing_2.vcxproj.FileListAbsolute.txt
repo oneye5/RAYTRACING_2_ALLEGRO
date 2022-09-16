@@ -1,0 +1,3 @@
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\x64\Debug\Raytracing_2.vcxproj.MdMergeInputs.cache
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\x64\Debug\Raytracing_2.vcxproj.cppwinrt_plat.cache
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\x64\Debug\Raytracing_2.vcxproj.cppwinrt_comp.cache
