@@ -1,4 +1,5 @@
 #include "Renderer.h"
+
 #pragma region viewportVars
 Vector3 camPos;
 Vector2 rot;
@@ -24,27 +25,70 @@ void InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
 }
 #pragma endregion
 #pragma region Geometry
-enum ShapeType
+enum shapeType
 {
-	Cube,
-	Sphere,
-	Polygon
+	sphere,
+	polygon
 };
-class point
+class Vertex
 {
-	float x;
-	float y;
-	float z;
+	Vector3 Pos;
 };
-class Shape
+class Triangle
 {
-	vector<point> points;
-
-	float oroginX;
-	float oroginY;
-	float oroginZ;
+	vector<Vertex> vertices;
+};
+ class Shape
+{
+	public:
+	//poly
+	shapeType shapetype;
+	vector<Triangle> triangles;
+	Shape(shapeType& ShapeType, vector<Triangle>& Triangles)
+	{
+		ShapeType = ShapeType;
+		triangles = Triangles;
+	}
+	Shape(shapeType ShapeType, vector<Triangle> Triangles)
+	{
+		ShapeType = ShapeType;
+		triangles = Triangles;
+	}
 
 	//sphere
+	Vector3 sphereOrogin;
 	float radius;
+	Shape(shapeType ShapeType, Vector3 SphereOrogin, float Radius)
+	{
+		ShapeType = ShapeType;
+		sphereOrogin = SphereOrogin;
+		radius = Radius;
+	}
 };
+#pragma endregion
+#pragma region enviroment
+ vector<Shape> shapes = vector<Shape>();
+ void initMap()
+ {
+	 auto shape = Shape(sphere, Vector3(0, 0, 0), 10);
+	
+ }
+#pragma endregion 
+#pragma region renderer
+ class RayHit
+ {
+	 Vector3 pos;
+	 Vector2 dir;
+	 float dist;
+	 Color col;
+ };
+ void checkSphere()
+ {
+
+ }
+ RayHit CastRay(Vector3 orogin,Vector2 dir)
+ {
+	
+ }
+
 #pragma endregion
