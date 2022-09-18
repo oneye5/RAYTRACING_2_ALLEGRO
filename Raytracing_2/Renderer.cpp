@@ -1,8 +1,10 @@
 #include "Renderer.h"
-
+#pragma region const vars
+const float maxRayDist = 100;
+#pragma endregion
 #pragma region viewportVars
 Vector3 camPos;
-Vector2 rot;
+Vector2 camRot;
 
 int screenWidth;
 int screenHeight;
@@ -75,19 +77,62 @@ class Triangle
  }
 #pragma endregion 
 #pragma region renderer
- class RayHit
+ class Ray
  {
+ public:
+	 bool Hit;
 	 Vector3 pos;
 	 Vector2 dir;
 	 float dist;
 	 Color col;
  };
- void checkSphere()
+ float checkSphere()
  {
 
  }
- RayHit CastRay(Vector3 orogin,Vector2 dir)
+ float checkPoly()
  {
+
+ }
+ void checkAllIntersect(Ray& ray)
+ {
+
+ }
+ Ray CastRay(Vector3 orogin,Vector2 dir)
+ {
+	 auto ray= Ray();
+	 
+	 for (float dist = 0; dist < maxRayDist; dist += rayStep)
+	 {
+		 ray.dist = dist;
+		 ray.pos = getRayPos(orogin, dist, dir);
+		 checkAllIntersect(ray);
+
+		 if (ray.Hit)
+		 {
+			 return ray;
+		 }
+	 }
+ }
+ void CastRays()
+ {
+	 float startAngleY = camRot.y - (fov.x / 2.0f);
+	 float endAngleY = camRot.y + (fov.x / 2.0f);
+
+	 float startAngleX = camRot.x + (fov.y / 2.0f);
+	 float endAngleX = camRot.x - (fov.y / 2.0f);
+
+	 float angleStepX = (fov.y / screenWidth);
+	 float angleStepY = (fov.x / screenHeight);
+
+	 vector<Ray> Rays;
+	 for (float xAngle = startAngleX; xAngle < endAngleX; xAngle += angleStepX) // y pixel iteration
+	 {
+		 for (float yAngle = startAngleX; yAngle < endAngleX; yAngle += angleStepY) // xpixel iteration
+		 {
+
+		 }
+	 }
 	
  }
 
