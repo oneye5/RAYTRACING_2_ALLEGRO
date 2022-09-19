@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include "3dMethods.h"
 #pragma region const vars
 const float maxRayDist = 100;
 #pragma endregion
@@ -19,93 +20,71 @@ void InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
 	float XFov, float YFov,
 	float RayStep)
 {
-
+	camPos = Vector3(CamPosX, CamPosY, CamPosZ);
+	camRot = Vector2(CamRotX, CamRotY);
 		screenWidth = ScreenWidth;
 		screenHeight = ScreenHeight;
 
+		fov = Vector2(XFov, YFov);
 		rayStep = RayStep;
 }
-#pragma endregion
-#pragma region Geometry
-enum shapeType
-{
-	sphere,
-	polygon
-};
-class Vertex
-{
-	Vector3 Pos;
-};
-class Triangle
-{
-	vector<Vertex> vertices;
-};
- class Shape
-{
-	public:
-	//poly
-	shapeType shapetype;
-	vector<Triangle> triangles;
-	Shape(shapeType& ShapeType, vector<Triangle>& Triangles)
-	{
-		ShapeType = ShapeType;
-		triangles = Triangles;
-	}
-	Shape(shapeType ShapeType, vector<Triangle> Triangles)
-	{
-		ShapeType = ShapeType;
-		triangles = Triangles;
-	}
 
-	//sphere
-	Vector3 sphereOrogin;
-	float radius;
-	Shape(shapeType ShapeType, Vector3 SphereOrogin, float Radius)
-	{
-		ShapeType = ShapeType;
-		sphereOrogin = SphereOrogin;
-		radius = Radius;
-	}
-};
+ vector<Shape> objects = vector<Shape>();
+void InitGeometry()
+{
+	Shape s1 = Shape(sphere, Vector3(0, 10, 1), 5.0f);
+	objects.push_back(s1);
+}
 #pragma endregion
-#pragma region enviroment
- vector<Shape> shapes = vector<Shape>();
- void initMap()
- {
-	 auto shape = Shape(sphere, Vector3(0, 0, 0), 10);
-	
- }
-#pragma endregion 
+
 #pragma region renderer
  class Ray
  {
  public:
+	 Ray()
+	 {
+
+	 }
 	 bool Hit;
 	 Vector3 pos;
 	 Vector2 dir;
 	 float dist;
 	 Color col;
  };
- float checkSphere()
+ void checkSphere(Shape& shape,Ray& ray)
  {
-
+	 auto rayObjDist = getDistanceTo(ray.pos, shape.sphereOrigin);
+	 if (rayObjDist < shape.radius)
+	 {
+		 //additional precision could be calculated here ( setting a new distance at the exact intersection)
+		 ray.Hit = true;
+		 ray.col = Color(255, 255, 255);
+	 }
  }
- float checkPoly()
+ void checkPoly()
  {
 
  }
  void checkAllIntersect(Ray& ray)
  {
-
+	 for (int i = 0; i < objects.size(); i++)
+	 {
+		 if (objects[i].shapetype == sphere)
+		 {
+			  checkSphere(objects[i],ray);
+		 }
+	 }
  }
- Ray CastRay(Vector3 orogin,Vector2 dir)
+ Ray CastRay(Vector3 origin,Vector2 dir)
  {
-	 auto ray= Ray();
-	 
+	 Ray ray = Ray();
+	 ray.col = Color(0,0,0);
+	 ray.Hit = false;
+
 	 for (float dist = 0; dist < maxRayDist; dist += rayStep)
 	 {
 		 ray.dist = dist;
-		 ray.pos = getRayPos(orogin, dist, dir);
+		 ray.pos = getRayPos(origin, dist, dir);
 		 checkAllIntersect(ray);
 
 		 if (ray.Hit)
@@ -113,8 +92,9 @@ class Triangle
 			 return ray;
 		 }
 	 }
+	 return ray;
  }
- void CastRays()
+ vector<Ray> CastRays()
  {
 	 float startAngleY = camRot.y - (fov.x / 2.0f);
 	 float endAngleY = camRot.y + (fov.x / 2.0f);
@@ -130,10 +110,21 @@ class Triangle
 	 {
 		 for (float yAngle = startAngleX; yAngle < endAngleX; yAngle += angleStepY) // xpixel iteration
 		 {
-
+			 Rays.push_back( CastRay(camPos, Vector2(xAngle, yAngle)));
 		 }
 	 }
 	
+	 return Rays;
  }
-
+ vector<PIXEL> Render()
+ {
+	 auto rays = CastRays();
+	 vector<PIXEL> pixels;
+	 for (int i = 0; i < rays.size(); i++)
+	 {
+		 Color col = Color(rays[i].col);
+		 pixels.push_back(PIXEL(col.R,col.G,col.B));
+	 }
+	 return pixels;
+ }
 #pragma endregion
