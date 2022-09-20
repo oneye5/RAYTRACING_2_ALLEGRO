@@ -1,5 +1,6 @@
 #include "Renderer.h"
 #include "3dMethods.h"
+#include<iostream>
 #pragma region const vars
 const float maxRayDist = 100;
 #pragma endregion
@@ -14,7 +15,7 @@ Vector2 fov;
 
 float rayStep;
 
-void InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
+void ViewPort::InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
 	float CamRotX, float CamRotY,
 	int ScreenWidth, int ScreenHeight,
 	float XFov, float YFov,
@@ -30,7 +31,7 @@ void InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
 }
 
  vector<Shape> objects = vector<Shape>();
-void InitGeometry()
+void ViewPort::InitGeometry()
 {
 	Shape s1 = Shape(sphere, Vector3(0, 10, 1), 5.0f);
 	objects.push_back(s1);
@@ -96,11 +97,12 @@ void InitGeometry()
  }
  vector<Ray> CastRays()
  {
+	 std::cout << "castingRays\n";
 	 float startAngleY = camRot.y - (fov.x / 2.0f);
 	 float endAngleY = camRot.y + (fov.x / 2.0f);
 
-	 float startAngleX = camRot.x + (fov.y / 2.0f);
-	 float endAngleX = camRot.x - (fov.y / 2.0f);
+	 float startAngleX = camRot.x - (fov.y / 2.0f);
+	 float endAngleX = camRot.x + (fov.y / 2.0f);
 
 	 float angleStepX = (fov.y / screenWidth);
 	 float angleStepY = (fov.x / screenHeight);
@@ -116,10 +118,11 @@ void InitGeometry()
 	
 	 return Rays;
  }
- vector<PIXEL> Render()
+ vector<PIXEL> ViewPort::Render()
  {
 	 auto rays = CastRays();
 	 vector<PIXEL> pixels;
+	 std::cout << "pixel count " << rays.size();
 	 for (int i = 0; i < rays.size(); i++)
 	 {
 		 Color col = Color(rays[i].col);
