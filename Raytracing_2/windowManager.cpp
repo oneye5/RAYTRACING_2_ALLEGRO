@@ -1,8 +1,8 @@
 #include "windowManager.h"
 
 
-	int WindowWidth = 1270;
-	int WindowHeight = 720;
+	int WindowWidth = 200;
+	int WindowHeight = 100;
 	bool running = true;
 	ALLEGRO_DISPLAY* Display;
 	ViewPort viewPort;
@@ -21,25 +21,29 @@
 	void WindowManager::initRenderer()
 	{
 		ViewPort viewPort = ViewPort();
-		viewPort.InitViewPort(0.0f, 0.0f, -10.0f,
+		viewPort.InitViewPort(0.0f, 0.0f, 0.0f,
 			0.0f, 0.0f,
 			WindowWidth, WindowHeight,
-			90.0f, 90.0f, 0.25);
+			60.0f, 60.0f);
 
 		viewPort.InitGeometry();
 	}
 	 void Render()
 	{
 		auto pixels = viewPort.Render();
-		int i = 0;
-		for(int y = 0; y < WindowHeight-1;i++)
+		int x = 0;
+		int y = 0;
+		for (int i = 0; i < pixels.size(); i++)
 		{
-			for (int x = 0; x < WindowWidth - 1; i++)
+			al_draw_pixel(x, y, al_map_rgb(pixels[i].R, pixels[i].G, pixels[i].B));
+			x++;
+			if (x > WindowWidth - 1)
 			{
-				i++;
-				al_draw_pixel(x, y, al_map_rgb(pixels[i].R, pixels[i].G, pixels[i].B));
+				y++;
+					x = 0;
 			}
 		}
+
 	}
 	void WindowManager::windowLoop()
 
@@ -49,7 +53,7 @@
 		{
 			Render();
 			al_flip_display();
-
+			
 			//event handeling
 #pragma region eventHandler
 			ALLEGRO_EVENT Event;

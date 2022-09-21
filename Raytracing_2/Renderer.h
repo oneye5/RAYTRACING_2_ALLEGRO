@@ -22,8 +22,7 @@ public:
 	void InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
 		float CamRotX, float CamRotY,
 		int ScreenWidth, int ScreenHeight,
-		float XFov, float YFov,
-		float RayStep);
+		float XFov, float YFov);
 	void InitGeometry();
 	vector<PIXEL> Render();
 };

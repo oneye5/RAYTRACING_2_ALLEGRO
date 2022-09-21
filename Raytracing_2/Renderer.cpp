@@ -2,7 +2,8 @@
 #include "3dMethods.h"
 #include<iostream>
 #pragma region const vars
-const float maxRayDist = 100;
+const float maxRayDist = 150;
+const float rayStep = 0.5;
 #pragma endregion
 #pragma region viewportVars
 Vector3 camPos;
@@ -13,13 +14,10 @@ int screenHeight;
 
 Vector2 fov;
 
-float rayStep;
-
 void ViewPort::InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
 	float CamRotX, float CamRotY,
 	int ScreenWidth, int ScreenHeight,
-	float XFov, float YFov,
-	float RayStep)
+	float XFov, float YFov)
 {
 	camPos = Vector3(CamPosX, CamPosY, CamPosZ);
 	camRot = Vector2(CamRotX, CamRotY);
@@ -27,14 +25,14 @@ void ViewPort::InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
 		screenHeight = ScreenHeight;
 
 		fov = Vector2(XFov, YFov);
-		rayStep = RayStep;
 }
 
  vector<Shape> objects = vector<Shape>();
 void ViewPort::InitGeometry()
 {
-	Shape s1 = Shape(sphere, Vector3(0, 10, 1), 5.0f);
-	objects.push_back(s1);
+	objects = vector<Shape>();
+	objects.push_back(Shape(sphere, Vector3(0.0f, 1.0f, 4.0f),10.0f));
+	objects.push_back(Shape(sphere, Vector3(1.0f, 1.0f, 100.0f), 50.0f));
 }
 #pragma endregion
 
@@ -55,6 +53,7 @@ void ViewPort::InitGeometry()
  void checkSphere(Shape& shape,Ray& ray)
  {
 	 auto rayObjDist = getDistanceTo(ray.pos, shape.sphereOrigin);
+//	 std::cout << rayObjDist << "\n";
 	 if (rayObjDist < shape.radius)
 	 {
 		 //additional precision could be calculated here ( setting a new distance at the exact intersection)
@@ -95,7 +94,7 @@ void ViewPort::InitGeometry()
 	 }
 	 return ray;
  }
- vector<Ray> CastRays()
+ vector<Ray> CastRays() //y = yaw, x = pitch
  {
 	 std::cout << "castingRays\n";
 	 float startAngleY = camRot.y - (fov.x / 2.0f);
@@ -104,18 +103,28 @@ void ViewPort::InitGeometry()
 	 float startAngleX = camRot.x - (fov.y / 2.0f);
 	 float endAngleX = camRot.x + (fov.y / 2.0f);
 
-	 float angleStepX = (fov.y / screenWidth);
-	 float angleStepY = (fov.x / screenHeight);
+	 double angleStepY = fov.y/ (float)screenWidth;
+	 double angleStepX = fov.x / (float)screenHeight;
+
+	 std::cout <<"fov xy "<<fov.x<<" "<<fov.y << " startangle x and end = " << startAngleX << " " << endAngleX << "\n";
+	 std::cout << "angleSteps = " << angleStepY << " " << angleStepY << " screenwidth and height "<<screenWidth <<" " << screenHeight << "\n";
+
+	 int y = 0;
+	 int x = 0;
 
 	 vector<Ray> Rays;
-	 for (float xAngle = startAngleX; xAngle < endAngleX; xAngle += angleStepX) // y pixel iteration
+	 for (float xAngle = startAngleX; xAngle <= endAngleX; xAngle += angleStepY) // y pixel iteration
 	 {
-		 for (float yAngle = startAngleX; yAngle < endAngleX; yAngle += angleStepY) // xpixel iteration
+		  y++;
+		  x = 0;
+		 for (float yAngle = startAngleX; yAngle <= endAngleX; yAngle += angleStepY) // xpixel iteration
 		 {
+			 x++;
 			 Rays.push_back( CastRay(camPos, Vector2(xAngle, yAngle)));
 		 }
 	 }
 	
+	 std::cout << "xy: " << x << " " << y << "\n";;
 	 return Rays;
  }
  vector<PIXEL> ViewPort::Render()
