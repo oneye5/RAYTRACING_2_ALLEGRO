@@ -5,6 +5,6 @@ C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(53,13): warnin
 C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(60,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(59,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
 C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(58,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\Renderer.cpp(116,67): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\Renderer.cpp(120,68): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\Renderer.cpp(117,66): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\Renderer.cpp(121,67): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
   Raytracing_2.vcxproj -> C:\Users\ocjla\source\repos\Raytracing_2\x64\Debug\WindowMain.exe

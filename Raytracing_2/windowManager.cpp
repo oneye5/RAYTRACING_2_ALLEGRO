@@ -2,7 +2,7 @@
 
 
 	int WindowWidth = 200;
-	int WindowHeight = 100;
+	int WindowHeight = 200;
 	bool running = true;
 	ALLEGRO_DISPLAY* Display;
 	ViewPort viewPort;

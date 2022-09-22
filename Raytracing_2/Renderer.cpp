@@ -33,6 +33,7 @@ void ViewPort::InitGeometry()
 	objects = vector<Shape>();
 	objects.push_back(Shape(sphere, Vector3(0.0f, 1.0f, 4.0f),10.0f));
 	objects.push_back(Shape(sphere, Vector3(1.0f, 1.0f, 100.0f), 50.0f));
+	objects.push_back(Shape(sphere, Vector3(1.0f, 1.0f, 15.0f), 20.0f));
 }
 #pragma endregion
 
@@ -103,8 +104,8 @@ void ViewPort::InitGeometry()
 	 float startAngleX = camRot.x - (fov.y / 2.0f);
 	 float endAngleX = camRot.x + (fov.y / 2.0f);
 
-	 double angleStepY = fov.y/ (float)screenWidth;
-	 double angleStepX = fov.x / (float)screenHeight;
+	 double angleStepY = fov.y/ ((float)screenWidth - 0.0f);
+	 double angleStepX = fov.x / ((float)screenHeight - 0.0f);
 
 	 std::cout <<"fov xy "<<fov.x<<" "<<fov.y << " startangle x and end = " << startAngleX << " " << endAngleX << "\n";
 	 std::cout << "angleSteps = " << angleStepY << " " << angleStepY << " screenwidth and height "<<screenWidth <<" " << screenHeight << "\n";
@@ -113,11 +114,11 @@ void ViewPort::InitGeometry()
 	 int x = 0;
 
 	 vector<Ray> Rays;
-	 for (float xAngle = startAngleX; xAngle <= endAngleX; xAngle += angleStepY) // y pixel iteration
+	 for (float xAngle = startAngleX; xAngle < endAngleX; xAngle += angleStepY) // y pixel iteration
 	 {
 		  y++;
 		  x = 0;
-		 for (float yAngle = startAngleX; yAngle <= endAngleX; yAngle += angleStepY) // xpixel iteration
+		 for (float yAngle = startAngleX; yAngle < endAngleX; yAngle += angleStepY) // xpixel iteration
 		 {
 			 x++;
 			 Rays.push_back( CastRay(camPos, Vector2(xAngle, yAngle)));
