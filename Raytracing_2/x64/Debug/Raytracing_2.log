@@ -1,10 +1,11 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(534,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (Raytracing_2.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Renderer.cpp
-C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(49,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(53,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(60,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(59,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(58,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\Renderer.cpp(117,66): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\Renderer.cpp(121,67): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(77,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(81,13): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(88,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(87,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\3dMethods.h(86,12): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\Renderer.cpp(6,23): warning C4244: '+=': conversion from 'float' to 'int', possible loss of data
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\Renderer.cpp(106,39): warning C4244: 'argument': conversion from 'int' to 'const float', possible loss of data
+C:\Users\ocjla\source\repos\Raytracing_2\Raytracing_2\Renderer.cpp(108,11): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
   Raytracing_2.vcxproj -> C:\Users\ocjla\source\repos\Raytracing_2\x64\Debug\WindowMain.exe

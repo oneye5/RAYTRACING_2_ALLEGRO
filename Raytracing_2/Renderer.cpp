@@ -31,9 +31,10 @@ void ViewPort::InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
 void ViewPort::InitGeometry()
 {
 	objects = vector<Shape>();
-	objects.push_back(Shape(sphere, Vector3(0.0f, 1.0f, 4.0f),10.0f));
-	objects.push_back(Shape(sphere, Vector3(1.0f, 1.0f, 100.0f), 50.0f));
-	objects.push_back(Shape(sphere, Vector3(1.0f, 1.0f, 15.0f), 20.0f));
+	objects.push_back(Shape(sphere, Vector3(0.0f, 1.0f, 10.0f),2.0f));
+	//objects.push_back(Shape(sphere, Vector3(0.0f, 1.0f, 10.0f), 2.0f));
+	//objects.push_back(Shape(sphere, Vector3(1.0f, 1.0f, 10.0f), 500.0f));
+	objects.push_back(Shape(sphere, Vector3(1.0f, 1.0f, 15.0f), 1.0f));
 }
 #pragma endregion
 
@@ -51,16 +52,16 @@ void ViewPort::InitGeometry()
 	 float dist;
 	 Color col;
  };
- void checkSphere(Shape& shape,Ray& ray)
+ float checkSphere(Shape& shape,Ray& ray)
  {
-	 auto rayObjDist = getDistanceTo(ray.pos, shape.sphereOrigin);
-//	 std::cout << rayObjDist << "\n";
-	 if (rayObjDist < shape.radius)
+	 float distTo = getDistanceTo(ray.pos, shape.sphereOrigin);
+	 if (shape.radius >= distTo)
 	 {
-		 //additional precision could be calculated here ( setting a new distance at the exact intersection)
+		// std::cout << "\n hit data = " << distTo << " xyzs " << shape.sphereOrigin.x << " " << shape.sphereOrigin.y << " " << shape.sphereOrigin.z << " "
+		//	 << ray.pos.x << " " << ray.pos.y << " " << ray.pos.z << " radius " << shape.radius;
 		 ray.Hit = true;
-		 ray.col = Color(255, 255, 255);
 	 }
+	 return distTo;
  }
  void checkPoly()
  {
@@ -68,76 +69,91 @@ void ViewPort::InitGeometry()
  }
  void checkAllIntersect(Ray& ray)
  {
+	 float lowestDist = maxRayDist;
 	 for (int i = 0; i < objects.size(); i++)
 	 {
-		 if (objects[i].shapetype == sphere)
+		 Shape& object = objects[i];
+		 if (object.shapetype == sphere)
 		 {
-			  checkSphere(objects[i],ray);
+			float distance = checkSphere(object, ray); // returns dist
+			if (ray.Hit == true)
+				return;
+
+
+			if (distance < lowestDist)
+			{
+				lowestDist = distance;
+			}
+		 }
+		 else // poly check
+		 {
+
 		 }
 	 }
+	 ray.dist += (lowestDist );
  }
  Ray CastRay(Vector3 origin,Vector2 dir)
  {
 	 Ray ray = Ray();
-	 ray.col = Color(0,0,0);
 	 ray.Hit = false;
+	 ray.dist = 0;
+	 ray.pos = origin;
+	 Vector3 posIncrement;
+	 posIncrement = getRayPos(Vector3(0,0,0), 1.0f, dir); // get xyz change per 1 unit distance (used for efficiency)
 
-	 for (float dist = 0; dist < maxRayDist; dist += rayStep)
+	 for (int d = 0; d < maxRayDist; d += rayStep)
 	 {
-		 ray.dist = dist;
-		 ray.pos = getRayPos(origin, dist, dir);
+		 ray.pos = origin + (posIncrement * d);
 		 checkAllIntersect(ray);
-
-		 if (ray.Hit)
+		 d = ray.dist;
+		 if (ray.Hit == true)
 		 {
+			 ray.col = Color(255, 255, 255);
 			 return ray;
+		 }
+		 else
+		 {
+			 ray.col = Color(0, 0, 0);
 		 }
 	 }
 	 return ray;
  }
  vector<Ray> CastRays() //y = yaw, x = pitch
  {
-	 std::cout << "castingRays\n";
-	 float startAngleY = camRot.y - (fov.x / 2.0f);
-	 float endAngleY = camRot.y + (fov.x / 2.0f);
+	 float startYaw = (camRot.y) - (fov.x / 2);
+	 float endYaw = (camRot.y) + (fov.x / 2);
+	 float currentYaw = startYaw;
 
-	 float startAngleX = camRot.x - (fov.y / 2.0f);
-	 float endAngleX = camRot.x + (fov.y / 2.0f);
+	 float startPitch = (camRot.x) + (fov.y / 2);
+	 float endPitch = (camRot.x) - (fov.y / 2);
+	 float currentPitch = startPitch;
 
-	 double angleStepY = fov.y/ ((float)screenWidth - 0.0f);
-	 double angleStepX = fov.x / ((float)screenHeight - 0.0f);
+	 vector<Ray> rays;
 
-	 std::cout <<"fov xy "<<fov.x<<" "<<fov.y << " startangle x and end = " << startAngleX << " " << endAngleX << "\n";
-	 std::cout << "angleSteps = " << angleStepY << " " << angleStepY << " screenwidth and height "<<screenWidth <<" " << screenHeight << "\n";
-
-	 int y = 0;
-	 int x = 0;
-
-	 vector<Ray> Rays;
-	 for (float xAngle = startAngleX; xAngle < endAngleX; xAngle += angleStepY) // y pixel iteration
+	 for (int pixelY = 0; pixelY < screenHeight ; pixelY++)
 	 {
-		  y++;
-		  x = 0;
-		 for (float yAngle = startAngleX; yAngle < endAngleX; yAngle += angleStepY) // xpixel iteration
+		 currentPitch = startPitch + (pixelY * (screenHeight / fov.y));
+		 for (int pixelX = 0; pixelX < screenWidth ;pixelX++ )
 		 {
-			 x++;
-			 Rays.push_back( CastRay(camPos, Vector2(xAngle, yAngle)));
+			 currentYaw = startPitch + (pixelX * (screenWidth / fov.x));
+			 rays.push_back(CastRay(camPos,Vector2(currentYaw,currentPitch))); 
+			 
 		 }
+		std::cout << "size \n" << rays.size();
 	 }
-	
-	 std::cout << "xy: " << x << " " << y << "\n";;
-	 return Rays;
+
+	 return rays;
  }
  vector<PIXEL> ViewPort::Render()
  {
-	 auto rays = CastRays();
-	 vector<PIXEL> pixels;
-	 std::cout << "pixel count " << rays.size();
-	 for (int i = 0; i < rays.size(); i++)
-	 {
-		 Color col = Color(rays[i].col);
-		 pixels.push_back(PIXEL(col.R,col.G,col.B));
-	 }
-	 return pixels;
+	auto rays =	 CastRays();
+	//convert to PIXEL class
+	vector<PIXEL> pixels;
+	for (int i = 0; i < rays.size(); i++)
+	{
+		auto ray = rays[i];
+		pixels.push_back(PIXEL(ray.col.R, ray.col.G, ray.col.B));
+	}
+	return pixels;
  }
 #pragma endregion

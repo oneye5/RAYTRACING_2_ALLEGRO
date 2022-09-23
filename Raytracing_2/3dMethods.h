@@ -15,6 +15,34 @@ public:
 		y = Y;
 		z = Z;
 	}
+	friend Vector3 operator+(const Vector3& v1, const Vector3& v2)
+	{
+		float x = v1.x + v2.x;
+		float y = v1.y + v2.y;
+		float z = v1.z + v2.z;
+		return Vector3(x, y, z);
+	}
+	friend Vector3 operator-(const Vector3& v1, const Vector3& v2)
+	{
+		float x = v1.x - v2.x;
+		float y = v1.y - v2.y;
+		float z = v1.z - v2.z;
+		return Vector3(x, y, z);
+	}
+	friend Vector3 operator*(const Vector3& v1, const Vector3& v2)
+	{
+		float x = v1.x * v2.x;
+		float y = v1.y * v2.y;
+		float z = v1.z * v2.z;
+		return Vector3(x, y, z);
+	}
+	friend Vector3 operator*(const Vector3& v1, const float v2)
+	{
+		float x = v1.x * v2;
+		float y = v1.y * v2;
+		float z = v1.z * v2;
+		return Vector3(x, y, z);
+	}
 };
 class Vector2
 {
@@ -71,7 +99,7 @@ float getDistanceTo(Vector3 from, Vector3 to)
 	zDif = zDif * zDif;
 	//squares all axis differences
 
-	return sqrtf(xDif + yDif + zDif);
+	return abs( sqrtf(xDif + yDif + zDif));
 }
 #pragma region Geometry
 enum shapeType
