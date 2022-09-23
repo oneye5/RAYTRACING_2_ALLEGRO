@@ -8,7 +8,7 @@ class PIXEL
 	unsigned char R;
 	unsigned char G;
 	unsigned char B;
-	PIXEL(unsigned char r, unsigned char g, unsigned char b)
+	PIXEL(unsigned char r, unsigned char g, unsigned char b )
 	{
 		R = r;
 		G = g;
@@ -19,6 +19,7 @@ class ViewPort
 {
 public:
 	//public methods
+
 	void InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
 		float CamRotX, float CamRotY,
 		int ScreenWidth, int ScreenHeight,

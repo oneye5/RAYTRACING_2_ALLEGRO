@@ -3,14 +3,17 @@
 #include<iostream>
 #pragma region const vars
 const float maxRayDist = 150;
-const float rayStep = 0.5;
+const float rayStep = 1;
 #pragma endregion
 #pragma region viewportVars
-Vector3 camPos;
-Vector2 camRot;
+
+float temp_ShadeMulti = 0.2;
 
 int screenWidth;
 int screenHeight;
+
+Vector3 camPos;
+Vector2 camRot;
 
 Vector2 fov;
 
@@ -34,7 +37,7 @@ void ViewPort::InitGeometry()
 	objects.push_back(Shape(sphere, Vector3(0.0f, 1.0f, 10.0f),2.0f));
 	//objects.push_back(Shape(sphere, Vector3(0.0f, 1.0f, 10.0f), 2.0f));
 	//objects.push_back(Shape(sphere, Vector3(1.0f, 1.0f, 10.0f), 500.0f));
-	objects.push_back(Shape(sphere, Vector3(1.0f, 1.0f, 15.0f), 1.0f));
+	objects.push_back(Shape(sphere, Vector3(5.0f, 2.0f, 15.0f), 4.0f));
 }
 #pragma endregion
 
@@ -96,9 +99,11 @@ void ViewPort::InitGeometry()
  {
 	 Ray ray = Ray();
 	 ray.Hit = false;
+	 ray.dir = dir;
 	 ray.dist = 0;
 	 ray.pos = origin;
 	 Vector3 posIncrement;
+	 
 	 posIncrement = getRayPos(Vector3(0,0,0), 1.0f, dir); // get xyz change per 1 unit distance (used for efficiency)
 
 	 for (int d = 0; d < maxRayDist; d += rayStep)
@@ -108,7 +113,7 @@ void ViewPort::InitGeometry()
 		 d = ray.dist;
 		 if (ray.Hit == true)
 		 {
-			 ray.col = Color(255, 255, 255);
+			 ray.col = Color(round( 255 /( ray.dist * temp_ShadeMulti)), round(255 / (ray.dist * temp_ShadeMulti)), round(255 / (ray.dist * temp_ShadeMulti)));
 			 return ray;
 		 }
 		 else
@@ -121,25 +126,29 @@ void ViewPort::InitGeometry()
  vector<Ray> CastRays() //y = yaw, x = pitch
  {
 	 float startYaw = (camRot.y) - (fov.x / 2);
-	 float endYaw = (camRot.y) + (fov.x / 2);
+	 float yawS = fov.x / screenWidth;
 	 float currentYaw = startYaw;
 
 	 float startPitch = (camRot.x) + (fov.y / 2);
-	 float endPitch = (camRot.x) - (fov.y / 2);
+	 float pitchS = fov.y / screenHeight;
 	 float currentPitch = startPitch;
+
+	 // current A = (S*I) + start
+	 //where S = fov/width
+
 
 	 vector<Ray> rays;
 
 	 for (int pixelY = 0; pixelY < screenHeight ; pixelY++)
 	 {
-		 currentPitch = startPitch + (pixelY * (screenHeight / fov.y));
+		 currentPitch = (pitchS * pixelY) + startPitch;
 		 for (int pixelX = 0; pixelX < screenWidth ;pixelX++ )
 		 {
-			 currentYaw = startPitch + (pixelX * (screenWidth / fov.x));
-			 rays.push_back(CastRay(camPos,Vector2(currentYaw,currentPitch))); 
+			 currentYaw = (yawS * pixelX) + startYaw;
+			 rays.push_back(CastRay(camPos,Vector2(currentPitch,currentYaw))); 
 			 
 		 }
-		std::cout << "size \n" << rays.size();
+		 std::cout << ((currentPitch - startPitch) / (fov.y))  * 1.43<<"% \n";
 	 }
 
 	 return rays;
@@ -152,8 +161,26 @@ void ViewPort::InitGeometry()
 	for (int i = 0; i < rays.size(); i++)
 	{
 		auto ray = rays[i];
+		/*
+		std::cout<< "\n ray stats : ";
+		std::cout<< ray.dir.x + 0;
+		std::cout<< " ";
+		std::cout<< ray.dir.y + 0;
+		std::cout<< " ";
+		std::cout<< ray.dist + 0;
+		std::cout<< " ";
+		std::cout<< ray.pos.x + 0;
+		std::cout<< " ";
+		std::cout<< ray.pos.y + 0;
+		std::cout<< " ";
+		std::cout<< ray.pos.z ;
+		*/
 		pixels.push_back(PIXEL(ray.col.R, ray.col.G, ray.col.B));
 	}
+
+	camPos.x += 1;
+	camPos.y += 1;
+	camPos.z += 0.5;
 	return pixels;
  }
 #pragma endregion

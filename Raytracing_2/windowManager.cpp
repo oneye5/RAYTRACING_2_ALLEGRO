@@ -3,6 +3,7 @@
 
 	int WindowWidth = 1000;
 	int WindowHeight = 500;
+	float baseFov =90;
 	bool running = true;
 	ALLEGRO_DISPLAY* Display;
 	ViewPort viewPort;
@@ -20,11 +21,14 @@
 	}
 	void WindowManager::initRenderer()
 	{
+		float aspectRatio = WindowWidth / WindowHeight;
+		float fovY = baseFov / aspectRatio;
+
 		ViewPort viewPort = ViewPort();
 		viewPort.InitViewPort(0.0f, 0.0f, 0.0f,
 			0.0f, 0.0f,
 			WindowWidth, WindowHeight,
-			60.0f, 60.0f);
+			baseFov, baseFov);
 
 		viewPort.InitGeometry();
 	}
@@ -44,7 +48,7 @@
 				 y++;
 			 }
 
-			 al_draw_pixel(x, y, al_map_rgb(pixel.R, pixel.G, pixel.B));
+			 al_draw_pixel(x,y, al_map_rgb(pixel.R, pixel.G, pixel.B));
 		 }
 	}
 	void WindowManager::windowLoop()
@@ -58,10 +62,12 @@
 			
 			//event handeling
 #pragma region eventHandler
+			/*
 			ALLEGRO_EVENT Event;
 			al_wait_for_event(Queue, &Event);
 			if (Event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
 				running = false;
+				*/
 #pragma endregion
 		} while (running);
 		al_destroy_display(Display);
