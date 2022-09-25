@@ -148,7 +148,6 @@ void ViewPort::InitGeometry()
 			 rays.push_back(CastRay(camPos,Vector2(currentPitch,currentYaw))); 
 			 
 		 }
-		 std::cout << ((currentPitch - startPitch) / (fov.y))  * 1.43<<"% \n";
 	 }
 
 	 return rays;
