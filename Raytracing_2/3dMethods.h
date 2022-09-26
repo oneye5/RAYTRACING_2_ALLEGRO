@@ -1,6 +1,7 @@
 #pragma once
 #define PI 3.1415926535897
 #include <vector>
+#include <cmath>
 using std::vector;
 
 class Vector3
@@ -91,15 +92,11 @@ Vector3 getRayPos(Vector3 origin, float dist, Vector2 A)
 }
 float getDistanceTo(Vector3 from, Vector3 to)
 {
-	float xDif = from.x - to.x;
-	xDif = xDif * xDif;
-	float yDif = from.y - to.y;
-	yDif = yDif * yDif;
-	float zDif = from.z - to.z;
-	zDif = zDif * zDif;
-	//squares all axis differences
-
-	return abs( sqrtf(xDif + yDif + zDif));
+	return sqrtf(
+		powf(to.x - from.x, 2) +
+		powf(to.y - from.y, 2) +
+		powf(to.z - from.y, 2) 
+	);
 }
 #pragma region Geometry
 enum shapeType

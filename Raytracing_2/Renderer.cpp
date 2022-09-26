@@ -2,8 +2,8 @@
 #include "3dMethods.h"
 #include<iostream>
 #pragma region const vars
-const float maxRayDist = 150;
-const float rayStep = 1;
+const float maxRayDist = 75;
+const float rayStep = 0.75;
 #pragma endregion
 #pragma region viewportVars
 
@@ -33,11 +33,11 @@ void ViewPort::InitViewPort(float CamPosX, float CamPosY, float CamPosZ,
  vector<Shape> objects = vector<Shape>();
 void ViewPort::InitGeometry()
 {
-	objects = vector<Shape>();
-	objects.push_back(Shape(sphere, Vector3(0.0f, 1.0f, 10.0f),2.0f));
-	//objects.push_back(Shape(sphere, Vector3(0.0f, 1.0f, 10.0f), 2.0f));
-	//objects.push_back(Shape(sphere, Vector3(1.0f, 1.0f, 10.0f), 500.0f));
-	objects.push_back(Shape(sphere, Vector3(5.0f, 2.0f, 15.0f), 4.0f));
+	objects.push_back(Shape(sphere, Vector3(0.0f, 0.0f, -10.0f),0.0f));
+
+
+	objects.push_back(Shape(sphere, Vector3(0.0f, 3.0f, 10.0f), 5.0f));
+	std::cout << "shape count = " << objects.size() << "\n";
 }
 #pragma endregion
 
@@ -58,10 +58,9 @@ void ViewPort::InitGeometry()
  float checkSphere(Shape& shape,Ray& ray)
  {
 	 float distTo = getDistanceTo(ray.pos, shape.sphereOrigin);
+	// std::cout << distTo << "\n";
 	 if (shape.radius >= distTo)
 	 {
-		// std::cout << "\n hit data = " << distTo << " xyzs " << shape.sphereOrigin.x << " " << shape.sphereOrigin.y << " " << shape.sphereOrigin.z << " "
-		//	 << ray.pos.x << " " << ray.pos.y << " " << ray.pos.z << " radius " << shape.radius;
 		 ray.Hit = true;
 	 }
 	 return distTo;
@@ -108,7 +107,8 @@ void ViewPort::InitGeometry()
 
 	 for (int d = 0; d < maxRayDist; d += rayStep)
 	 {
-		 ray.pos = origin + (posIncrement * d);
+		// ray.pos = origin + (posIncrement * d);
+		 ray.pos = getRayPos(origin, d, dir);
 		 checkAllIntersect(ray);
 		 d = ray.dist;
 		 if (ray.Hit == true)
@@ -177,9 +177,9 @@ void ViewPort::InitGeometry()
 		pixels.push_back(PIXEL(ray.col.R, ray.col.G, ray.col.B));
 	}
 
-	camPos.x += 1;
-	camPos.y += 1;
-	camPos.z += 0.5;
+	camRot.x += 0;
+	camRot.y += 5;
+	//camPos.z += 0.5;
 	return pixels;
  }
 #pragma endregion

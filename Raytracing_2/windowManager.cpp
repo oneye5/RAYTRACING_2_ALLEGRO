@@ -3,7 +3,8 @@
 
 	int WindowWidth = 1000;
 	int WindowHeight = 500;
-	float baseFov =90;
+	float fovX =90;
+	float fovY = 45;
 	bool running = true;
 	ALLEGRO_DISPLAY* Display;
 	ViewPort viewPort;
@@ -21,14 +22,12 @@
 	}
 	void WindowManager::initRenderer()
 	{
-		float aspectRatio = WindowWidth / WindowHeight;
-		float fovY = baseFov / aspectRatio;
 
 		ViewPort viewPort = ViewPort();
 		viewPort.InitViewPort(0.0f, 0.0f, 0.0f,
 			0.0f, 0.0f,
 			WindowWidth, WindowHeight,
-			baseFov, baseFov);
+			fovX, fovY);
 
 		viewPort.InitGeometry();
 	}
